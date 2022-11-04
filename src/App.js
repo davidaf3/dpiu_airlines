@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import LoginForm from "./Components/LoginForm";
 import { Route, Routes, Link } from "react-router-dom";
 
-import { Layout, Menu, Col, Row, Avatar } from "antd";
+import { Divider, Typography, Layout, Menu, Col, Row, Avatar, Drawer, Button } from "antd";
 import {
   UserAddOutlined,
   LoginOutlined,
@@ -20,6 +20,8 @@ import TicketHistory from "./Components/TicketHistory";
 import SignUp from "./Components/SignUp";
 import { getAirlines, getAirports, getFavouriteAirport } from "./api";
 import "./App.css";
+import ChangeFavouriteAirport from "./Components/ChangeFavouriteAirport";
+
 
 class App extends React.Component {
   constructor(props) {
@@ -44,7 +46,10 @@ class App extends React.Component {
       airports: new Map(),
       airlines: new Map(),
       user: null,
+      isOpen: false
     };
+
+    this.isOpen = false;
   }
 
   componentDidMount() {
@@ -103,6 +108,17 @@ class App extends React.Component {
     });
   }
 
+  openDrawer() {
+    this.isOpen = true
+    console.log("hola")
+
+    this.setState({
+      isOpen:true
+    })
+    this.forceUpdate();
+  }
+
+
   render() {
     const { Header, Content } = Layout;
 
@@ -122,7 +138,7 @@ class App extends React.Component {
       },
       {
         key: "anon_menuLogin",
-        label: <Link to="/login">Inicar sesión</Link>,
+        label: <Link to="/login">Iniciar sesión</Link>,
         icon: <LoginOutlined />,
       },
       {
@@ -156,11 +172,13 @@ class App extends React.Component {
             </Col>
             {this.state.user && (
               <Col>
-                <Avatar>{this.state.user.email[0]}</Avatar>
+                <Avatar onClick={() => this.openDrawer()}>{this.state.user.email[0]}</Avatar>
               </Col>
             )}
           </Row>
+
         </Header>
+
 
         <Content
           style={{
@@ -196,9 +214,6 @@ class App extends React.Component {
                   supabase={this.supabase}
                   airports={this.state.airports}
                   user={this.state.user}
-                  onChangeFavouriteAirport={this.onChangeFavouriteAirport.bind(
-                    this
-                  )}
                 />
               }
             />
@@ -240,6 +255,9 @@ class App extends React.Component {
             />
           </Routes>
         </Content>
+        <Drawer title="Selecciona tu aeropuerto favorito y se quedará guardado" placement="right" onClose={() => this.setState({isOpen: false})} open={this.state.isOpen}>
+          <ChangeFavouriteAirport onChange={this.onChangeFavouriteAirport} supabase={this.supabase} airports={this.state.airports} user={this.state.user} />
+        </Drawer>
       </Layout>
     );
   }

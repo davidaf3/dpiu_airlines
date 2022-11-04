@@ -1,7 +1,7 @@
 import React from 'react';
 import withRouter from './withRouter';
 import LoginForm from "./LoginForm";
-import { Modal, Card, Row, Col, Descriptions, Button, Steps, PageHeader, AutoComplete, Form, Input, Collapse, Typography, Tooltip, Result, notification, Checkbox, Table, Divider } from 'antd';
+import { Space, Modal, Card, Row, Col, Descriptions, Button, Steps, PageHeader, AutoComplete, Form, Input, Collapse, Typography, Tooltip, Result, notification, Checkbox, Table, Divider } from 'antd';
 const { Step } = Steps;
 const { Meta } = Card;
 const { Panel } = Collapse;
@@ -12,10 +12,10 @@ class TicketBuyPassengers extends React.Component {
 
   constructor(props) {
     super(props)
-    
+
 
     this.code = props.searchParams.get("departure");
-    this.code_vuelta = props.searchParams.has("return") ? 
+    this.code_vuelta = props.searchParams.has("return") ?
       props.searchParams.get("return") : undefined;
 
     this.user = props.user?.id;
@@ -37,7 +37,7 @@ class TicketBuyPassengers extends React.Component {
       airline2: {},
       tickets2: {},
       discount: {},
-      resaltarAsientosBaratos:false,
+      resaltarAsientosBaratos: false,
       isModalOpen: false
     }
     this.passengers = []
@@ -263,7 +263,7 @@ class TicketBuyPassengers extends React.Component {
       var price = this.state.flight2.base_price
     } else {
       var price = this.state.flight.base_price;
-    } 
+    }
     if (column == 1 || column == this.state.plane.columns) {
       price += 20;
       incremented = true
@@ -273,7 +273,7 @@ class TicketBuyPassengers extends React.Component {
       incremented = true
     }
     if (this.state.resaltarAsientosBaratos && !incremented) {
-        return <Tooltip placement="top" title={"Asiento " + numberOfSeat}><Col span={2}><Button type="primary" ghost onClick={() => { this.addTicket(row, column, price) }} style={{ width: "100%" }}>{price + "€"}</Button></Col></Tooltip>
+      return <Tooltip placement="top" title={"Asiento " + numberOfSeat}><Col span={2}><Button type="primary" ghost onClick={() => { this.addTicket(row, column, price) }} style={{ width: "100%" }}>{price + "€"}</Button></Col></Tooltip>
     } else {
       return <Tooltip placement="top" title={"Asiento " + numberOfSeat}><Col span={2}><Button onClick={() => { this.addTicket(row, column, price) }} style={{ width: "100%" }}>{price + "€"}</Button></Col></Tooltip>
 
@@ -404,7 +404,7 @@ class TicketBuyPassengers extends React.Component {
           required: true,
           message: 'Por favor, introduce el nombre del pasajero',
         },]}>
-        <Input/>
+        <Input />
       </Form.Item>
 
       <Form.Item label="Apellido" name={"apellido_" + i} rules={[
@@ -465,7 +465,7 @@ class TicketBuyPassengers extends React.Component {
         if (!this.hayquehacervuelta) {
           this.hayquehacervuelta = true;
           this.state.passengerProgress = 0;
-          this.generalProgress = this.generalProgress+1;
+          this.generalProgress = this.generalProgress + 1;
           this.forceUpdate();
         } else {
           { this.modifyProgress(1) }
@@ -477,349 +477,366 @@ class TicketBuyPassengers extends React.Component {
     }
   }
 
-seatPassenger() {
-  return <PageHeader title="Pasajeros">
-    <Descriptions size="medium" column={1}>
-      <Descriptions.Item label="Pasajero"><Text strong>{this.passengers[this.state.passengerProgress].nombre + " " + this.passengers[this.state.passengerProgress].apellido}</Text></Descriptions.Item>
-      <Descriptions.Item><Text italic>Selecciona tu asiento</Text></Descriptions.Item>
-      <Descriptions.Item>{this.getCheapestTickets()}</Descriptions.Item>
-    </Descriptions>
-  </PageHeader>
-}
-
-getCheapestTickets() {
-  return <Checkbox onChange={this.updateSeatButtons.bind(this)}>Resaltar asientos más baratos</Checkbox>
-
-}
-
-
-updateSeatButtons() {
-  console.log(!this.state.resaltarAsientosBaratos)
-  this.setState({
-    resaltarAsientosBaratos: !this.state.resaltarAsientosBaratos
-  })
-
-
-}
-
-
-getSeatPassengerProgress() {
-  let array = []
-  for (var i = 1; i <= this.numberOfPassengers; i++) {
-    array.push(<Step title={"Asiento para " + this.passengers[i - 1].nombre + " " + this.passengers[i - 1].apellido} ></Step>);
-  }
-  return array
-}
-
-addPrice(number) {
-
-  for (var i = 0; i < this.tickets.length; i++) {
-    this.tickets[i].price += number;
+  seatPassenger() {
+    return <PageHeader title="Pasajeros">
+      <Descriptions size="medium" column={1}>
+        <Descriptions.Item label="Pasajero"><Text strong>{this.passengers[this.state.passengerProgress].nombre + " " + this.passengers[this.state.passengerProgress].apellido}</Text></Descriptions.Item>
+        <Descriptions.Item><Text italic>Selecciona tu asiento</Text></Descriptions.Item>
+        <Descriptions.Item>{this.getCheapestTickets()}</Descriptions.Item>
+      </Descriptions>
+    </PageHeader>
   }
 
-  this.modifyProgress(1) 
-}
+  getCheapestTickets() {
+    return <Checkbox onChange={this.updateSeatButtons.bind(this)}>Resaltar asientos más baratos</Checkbox>
 
-getContentAccordingToProgress() {
-  const array = []
-  if (this.state.progress == 1) {
-
-    array.push(<Form onFinish={values => this.getPassengers(values)}><Collapse defaultActiveKey={['1']}>{this.createPassengerForms()}</Collapse>
-      <Row justify="center"><Col> <Button onClick={() => this.props.navigate("/")}> Cambiar búsqueda</Button></Col><Col><Button htmlType="submit" type="primary">Siguiente</Button></Col></Row></Form>)
-
-
-  } else if (this.state.progress == 2) {
-
-    if (this.numberOfPassengers > 1) {
-      array.push(<Divider></Divider>)
-      array.push(<Steps direction="vertical" size="small" current={this.state.passengerProgress}>{this.getSeatPassengerProgress()}</Steps>)
-      array.push(<Divider></Divider>)
-    }
-    array.push(<Row justify="center"> <Col span={4}>{this.seatPassenger()}</Col><Col span={19}>{this.createSeats()}</Col></Row>);
-    array.push(<Button onClick={() => { this.modifyProgress(-1) }}>Atrás</Button>)
-
-  } else if (this.state.progress == 3) {
-
-    array.push(<Row gutter={16}>
-      <Col span={8}>
-        <Card title="Value" hoverable style={{ width: 240, }} cover={<img alt="example" src="https://gfhyobdofzshidbbnaxf.supabase.co/storage/v1/object/public/tarifas/value.png" />}>
-          <Meta title="Viaje ligero" description="Para solo viajar" />
-          <Button onClick={() => { this.addPrice(0) }} >Continuar con precio</Button>
-        </Card>
-      </Col>
-      <Col span={8}>
-        <Card title="Regular" hoverable style={{ width: 240, }} cover={<img alt="example" src="https://gfhyobdofzshidbbnaxf.supabase.co/storage/v1/object/public/tarifas/regular.png" />}>
-          <Meta title="Para vuelos cortos" description="Excelente para vuelos cortos" />
-          <Button onClick={() => { this.addPrice(20) }} type="primary">20 € más por billete</Button>
-        </Card>
-      </Col>
-      <Col span={8}>
-        <Card title="Plus" hoverable style={{ width: 240, }} cover={<img alt="example" src="https://gfhyobdofzshidbbnaxf.supabase.co/storage/v1/object/public/tarifas/plus.png" />}>
-          <Meta title="Para viajar con comodidad" description="La mejor manera de viajar" />
-          <Button onClick={() => { this.addPrice(100) }} type="primary">100 € más por billete</Button>
-        </Card>
-      </Col>
-    </Row>)
-
-  } else if (this.state.progress == 4) {
-    if (!this.appliedDiscount) {
-      array.push(
-        <Form layout="inline"name="basic" labelCol={{ span: 12, }} wrapperCol={{ span: 8, }} onFinish={values => this.calculateDiscount(values)}>
-          <Form.Item label="Código de descuento" name="descuento">
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button htmlType="submit">Aplicar descuento</Button>
-          </Form.Item>
-        </Form>)
-        array.push(<Divider></Divider>)
-    }
-
-    array.push( <Form>  <Form.Item label="Número de tarjeta" name={"tarjeta"} rules={[
-      {
-        required: true,
-        message: 'Por favor, introduzca un método de pago',
-      },]}>
-      <Input/>
-    </Form.Item></Form>   )
-    array.push(<Divider></Divider>)
-    const columns = [
-      {
-        title: 'Vuelo',
-        dataIndex: 'flight_code',
-        key: 'flight_code',
-      },
-      {
-        title: 'Nombre',
-        dataIndex: 'first_name',
-        key: 'first_name',
-      },
-      {
-        title: 'Apellido',
-        dataIndex: 'last_name',
-        key: 'last_name',
-      },
-      {
-        title: 'Fila',
-        dataIndex: 'row',
-        key: 'row',
-      },
-      {
-        title: 'Columna',
-        dataIndex: 'column',
-        key: 'column',
-      },
-      {
-        title: 'Precio',
-        dataIndex: 'price',
-        key: 'price',
-        render: text => <p>{text + " €"}</p>
-      },
-  
-    ];  
-  
-    array.push(<Table columns={columns} dataSource={this.tickets} />)
-    this.totalPrice = 0;
-    for (var i = 0; i < this.tickets.length; i++) {
-      this.totalPrice += this.tickets[i].price;
-    }
-    array.push(<Divider></Divider>)
-    array.push(<Modal title="Inicia sesión para continuar" open={this.state.isModalOpen} onOk={() => this.closeModal()} onCancel={() => this.closeModal()} footer={null}>
-    <LoginForm
-      callBackOnFinishLoginForm={this.doCallback.bind(this)}
-      redirectHome={false}
-      showTitle={false}
-    />
-  </Modal>)
-    array.push(<Row justify="center"><Col><Title level={3}> Precio total: <Text type="success">{this.totalPrice + " €"}</Text></Title></Col><Col><Button onClick={() => { this.comprarTickets() }} type="primary">Comprar billetes</Button></Col></Row>)
-
-    
-
-  } else if (this.state.progress == 5) {
-    array.push(  <Result
-      status="success"
-      title="¡Billetes listos!"
-      subTitle="La compra de los billetes se ha realizado correctamente"
-      extra={[
-        <Button type="primary" key="console" onClick={() => this.props.navigate("/user/history")}>
-          Ver billetes comprados
-        </Button>,
-        <Button key="buy" onClick={() => this.props.navigate("/")}>Volver a ver más vuelos</Button>,
-      ]}
-    />)
   }
 
-  return array
-}
 
-doCallback(loginUser) {
-  return this.props.callBackOnFinishLoginForm(loginUser)
-    .then(this.closeModal.bind(this));
-}
-
-closeModal() {
-  this.setState({ isModalOpen: false })
-}
-
-
-comprarTickets() {
-  if (this.props.user != null) {
-    for (var i = 0; i < this.tickets.length; i++) {
-      this.tickets[i].user = this.props.user;
-      this.sendCreateTicket(this.tickets[i]);
-    }
-    this.modifyProgress(1);
-  } else {
+  updateSeatButtons() {
+    console.log(!this.state.resaltarAsientosBaratos)
     this.setState({
-      isModalOpen: true
+      resaltarAsientosBaratos: !this.state.resaltarAsientosBaratos
     })
+
+
   }
 
 
-}
+  getSeatPassengerProgress() {
+    let array = []
+    for (var i = 1; i <= this.numberOfPassengers; i++) {
+      array.push(<Step title={"Asiento para " + this.passengers[i - 1].nombre + " " + this.passengers[i - 1].apellido} ></Step>);
+    }
+    return array
+  }
 
-calculateDiscount(values) {
-  this.discountparam = values.descuento;
-  this.getDiscount();
+  addPrice(number) {
 
-}
+    for (var i = 0; i < this.tickets.length; i++) {
+      this.tickets[i].price += number;
+    }
 
-async sendCreateTicket(values){
-      
- //const { data: { user } } = await this.props.supabase.auth.getUser();
+    this.modifyProgress(1)
+  }
 
-//let file = values.image.file  // dont use "value.image.file" it has an error in upload
+  getContentAccordingToProgress() {
+    const array = []
+    if (this.state.progress == 1) {
+
+      array.push(<Form onFinish={values => this.getPassengers(values)}>
+        <Row type="flex" justify="center">
+          <Space direction="vertical" size="middle">
+            <Collapse defaultActiveKey={['1']}>{this.createPassengerForms()}</Collapse>
+            <Row type="flex" justify="center">
+              <Space size="middle">
+                <Col>
+                  <Button onClick={() => this.props.navigate("/")}> Cambiar búsqueda</Button>
+                </Col>
+                <Col>
+                  <Button htmlType="submit" type="primary">Siguiente</Button>
+                </Col>
+              </Space>
+            </Row>
+          </Space>
+        </Row>
+      </Form>)
 
 
+    } else if (this.state.progress == 2) {
 
-  if (this.props.user != null){
-  const { data, error } = await this.props.supabase
-    .from('ticket')
-    .insert([
-       { 
-          user: this.props.user.id, 
-          first_name: values.first_name,
-          last_name: values.last_name,
-          row: values.row,
-          column: values.column,
-          flight_code: values.flight_code,
-          price: values.price
-       }
-    ])
+      if (this.numberOfPassengers > 1) {
+        array.push(<Divider></Divider>)
+        array.push(<Steps direction="vertical" size="small" current={this.state.passengerProgress}>{this.getSeatPassengerProgress()}</Steps>)
+        array.push(<Divider></Divider>)
+      }
+      array.push(<Row type="flex" justify="center"> <Col span={4}>{this.seatPassenger()}</Col><Col span={20}>{this.createSeats()}</Col></Row>);
+      array.push(<Button onClick={() => { this.modifyProgress(-1) }}>Atrás</Button>)
 
-    if (error != null){
-      console.log(error);
+    } else if (this.state.progress == 3) {
+
+      array.push(<Row type="flex" justify="center"><Space size="middle">
+        <Col span={8}>
+          <Card title="Value" hoverable style={{ width: 240, }} cover={<img alt="example" src="https://gfhyobdofzshidbbnaxf.supabase.co/storage/v1/object/public/tarifas/value.png" />}>
+            <Space direction="vertical" size="middle">
+              <Meta title="Viaje ligero" description="Para solo viajar" />
+              <Row type="flex" justify="center"><Button onClick={() => { this.addPrice(0) }} >Continuar con precio</Button></Row>
+            </Space>
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card title="Regular" hoverable style={{ width: 240, }} cover={<img alt="example" src="https://gfhyobdofzshidbbnaxf.supabase.co/storage/v1/object/public/tarifas/regular.png" />}>
+            <Space direction="vertical" size="middle"><Meta title="Para vuelos cortos" description="Excelente para vuelos cortos" />
+              <Row type="flex" justify="center"><Button onClick={() => { this.addPrice(20) }} type="primary">20 € más por billete</Button></Row>
+            </Space></Card>
+        </Col>
+        <Col span={8}>
+          <Card title="Plus" hoverable style={{ width: 240, }} cover={<img alt="example" src="https://gfhyobdofzshidbbnaxf.supabase.co/storage/v1/object/public/tarifas/plus.png" />}>
+            <Space direction="vertical" size="middle"><Meta title="Para viajar con comodidad" description="La mejor manera de viajar" />
+              <Row type="flex" justify="center"><Button onClick={() => { this.addPrice(100) }} type="primary">100 € más por billete</Button></Row>
+            </Space></Card>
+        </Col>
+      </Space>
+      </Row>)
+
+    } else if (this.state.progress == 4) {
+      if (!this.appliedDiscount) {
+        array.push(
+          <Row type="flex" justify="center"><Form layout="inline" name="basic" labelCol={{ span: 12, }} wrapperCol={{ span: 8, }} onFinish={values => this.calculateDiscount(values)}>
+            <Form.Item label="Código de descuento" name="descuento">
+              <Input />
+            </Form.Item>
+            <Form.Item>
+              <Button htmlType="submit">Aplicar descuento</Button>
+            </Form.Item>
+          </Form></Row>)
+        array.push(<Divider></Divider>)
+      }
+
+      array.push(<Row type="flex" justify="center"><Form>  <Form.Item label="Número de tarjeta" name={"tarjeta"} rules={[
+        {
+          required: true,
+          message: 'Por favor, introduzca un método de pago',
+        },]}>
+        <Input />
+      </Form.Item></Form></Row>)
+      array.push(<Divider></Divider>)
+      const columns = [
+        {
+          title: 'Vuelo',
+          dataIndex: 'flight_code',
+          key: 'flight_code',
+        },
+        {
+          title: 'Nombre',
+          dataIndex: 'first_name',
+          key: 'first_name',
+        },
+        {
+          title: 'Apellido',
+          dataIndex: 'last_name',
+          key: 'last_name',
+        },
+        {
+          title: 'Fila',
+          dataIndex: 'row',
+          key: 'row',
+        },
+        {
+          title: 'Columna',
+          dataIndex: 'column',
+          key: 'column',
+        },
+        {
+          title: 'Precio',
+          dataIndex: 'price',
+          key: 'price',
+          render: text => <p>{text + " €"}</p>
+        },
+
+      ];
+
+      array.push(<Table columns={columns} dataSource={this.tickets} />)
+      this.totalPrice = 0;
+      for (var i = 0; i < this.tickets.length; i++) {
+        this.totalPrice += this.tickets[i].price;
+      }
+      array.push(<Divider></Divider>)
+      array.push(<Modal title="Inicia sesión para continuar" open={this.state.isModalOpen} onOk={() => this.closeModal()} onCancel={() => this.closeModal()} footer={null}>
+        <LoginForm
+          callBackOnFinishLoginForm={this.doCallback.bind(this)}
+          redirectHome={false}
+          showTitle={false}
+        />
+      </Modal>)
+      array.push(<Row type="flex" justify="center"><Space direction="vertical" size="middle"><Row type="flex" justify="center"><Title level={4}> Precio total: <Text underline>{this.totalPrice + " €"}</Text></Title></Row><Row type="flex" justify="center"><Button onClick={() => { this.comprarTickets() }} type="primary">Comprar billetes</Button></Row> </Space></Row>)
+
+
+    } else if (this.state.progress == 5) {
+      array.push(<Result
+        status="success"
+        title="¡Billetes listos!"
+        subTitle="La compra de los billetes se ha realizado correctamente"
+        extra={[
+          <Button type="primary" key="console" onClick={() => this.props.navigate("/user/history")}>
+            Ver billetes comprados
+          </Button>,
+          <Button key="buy" onClick={() => this.props.navigate("/")}>Volver a ver más vuelos</Button>,
+        ]}
+      />)
+    }
+
+    return array
+  }
+
+  doCallback(loginUser) {
+    return this.props.callBackOnFinishLoginForm(loginUser)
+      .then(this.closeModal.bind(this));
+  }
+
+  closeModal() {
+    this.setState({ isModalOpen: false })
+  }
+
+
+  comprarTickets() {
+    if (this.props.user != null) {
+      for (var i = 0; i < this.tickets.length; i++) {
+        this.tickets[i].user = this.props.user;
+        this.sendCreateTicket(this.tickets[i]);
+      }
+      this.modifyProgress(1);
     } else {
       this.setState({
-        createdItem : true
-      }) 
-    }  
-
-}
-}
-
-applyDiscount() {
-  if (this.wrongdiscount) {
-    notification.open({
-      message: 'No se ha aplicado ningún descuento',
-      description:
-        'El código introducido es érroneo',
-      onClick: () => {
-        console.log('Notification Clicked!');
-      },
-    });
-  } else {
-    this.totalPrice = 0;
-    for (var i = 0; i < this.tickets.length; i++) {
-      this.tickets[i].price -= ((this.tickets[i].price * this.state.discount.percentage)/100)
+        isModalOpen: true
+      })
     }
-    notification.open({
-      message: 'Descuento aplicado',
-      description:'Se ha aplicado correctamente un descuento a los billetes ',
-      onClick: () => {
-        console.log('Notification Clicked!');
-      },
-    });
+
+
   }
-  this.forceUpdate();
+
+  calculateDiscount(values) {
+    this.discountparam = values.descuento;
+    this.getDiscount();
+
+  }
+
+  async sendCreateTicket(values) {
+
+    //const { data: { user } } = await this.props.supabase.auth.getUser();
+
+    //let file = values.image.file  // dont use "value.image.file" it has an error in upload
 
 
-}
 
-modifyProgress(number) {
-  this.state.progress += number;
-  this.generalProgress += number;
-  this.forceUpdate();
-}
+    if (this.props.user != null) {
+      const { data, error } = await this.props.supabase
+        .from('ticket')
+        .insert([
+          {
+            user: this.props.user.id,
+            first_name: values.first_name,
+            last_name: values.last_name,
+            row: values.row,
+            column: values.column,
+            flight_code: values.flight_code,
+            price: values.price
+          }
+        ])
 
-getSteps() {
-  if (this.code_vuelta == undefined) {
+      if (error != null) {
+        console.log(error);
+      } else {
+        this.setState({
+          createdItem: true
+        })
+      }
+
+    }
+  }
+
+  applyDiscount() {
+    if (this.wrongdiscount) {
+      notification.open({
+        message: 'No se ha aplicado ningún descuento',
+        description:
+          'El código introducido es érroneo',
+        onClick: () => {
+          console.log('Notification Clicked!');
+        },
+      });
+    } else {
+      this.totalPrice = 0;
+      for (var i = 0; i < this.tickets.length; i++) {
+        this.tickets[i].price -= ((this.tickets[i].price * this.state.discount.percentage) / 100)
+      }
+      notification.open({
+        message: 'Descuento aplicado',
+        description: 'Se ha aplicado correctamente un descuento a los billetes ',
+        onClick: () => {
+          console.log('Notification Clicked!');
+        },
+      });
+    }
+    this.forceUpdate();
+
+
+  }
+
+  modifyProgress(number) {
+    this.state.progress += number;
+    this.generalProgress += number;
+    this.forceUpdate();
+  }
+
+  getSteps() {
+    if (this.code_vuelta == undefined) {
+      return <Steps progressDot current={this.generalProgress}>
+        <Step title="Vuelos" description="Selección del vuelo" />
+        <Step title="Pasajeros" description="Pasajeros que querrán viajar" />
+        <Step title="Asientos" description="Asientos para el vuelo de ida" />
+        <Step title="Tarifa" description="Plan de vuelo" />
+        <Step title="Compra" description="Compra de los billetes" />
+      </Steps>
+
+    }
     return <Steps progressDot current={this.generalProgress}>
       <Step title="Vuelos" description="Selección del vuelo" />
       <Step title="Pasajeros" description="Pasajeros que querrán viajar" />
-      <Step title="Asientos" description="Asientos para el vuelo de ida" />
+      <Step title="Asientos de ida" description="Asientos para el vuelo de ida" />
+      <Step title="Asientos de vuelta" description="Asientos para el vuelo de vuelta" />
       <Step title="Tarifa" description="Plan de vuelo" />
       <Step title="Compra" description="Compra de los billetes" />
     </Steps>
 
-  }
-  return <Steps progressDot current={this.generalProgress}>
-    <Step title="Vuelos" description="Selección del vuelo" />
-    <Step title="Pasajeros" description="Pasajeros que querrán viajar" />
-    <Step title="Asientos de ida" description="Asientos para el vuelo de ida" />
-    <Step title="Asientos de vuelta" description="Asientos para el vuelo de vuelta" />
-    <Step title="Tarifa" description="Plan de vuelo" />
-    <Step title="Compra" description="Compra de los billetes" />
-  </Steps>
 
-
-}
-
-getFlightInformation() {
-  if (this.code_vuelta == undefined) {
-    return <PageHeader title="Información del vuelo" extra={[
-      <Button onClick={() => this.props.navigate("/")}>Cambiar búsqueda</Button>]}>
-      <Descriptions size="small" column={1}>
-        <Descriptions.Item label="Origen"><Text strong>{this.state.origin.city}</Text></Descriptions.Item>
-        <Descriptions.Item label="Destino"><Text strong>{this.state.destination.city}</Text></Descriptions.Item>
-        <Descriptions.Item label="Número de pasajeros"><Text italic>{this.numberOfPassengers}</Text></Descriptions.Item>
-      </Descriptions>
-    </PageHeader>
-  } else {
-    return <PageHeader title="Información de los vuelos" extra={[
-      <Button onClick={() => this.props.navigate("/")}>Cambiar búsqueda</Button>]}>
-
-      <Descriptions title="Vuelo de ida" size="small" column={2}>
-        <Descriptions.Item label="Origen"><Text strong>{this.state.origin.city}</Text></Descriptions.Item>
-        <Descriptions.Item label="Destino"><Text strong>{this.state.destination.city}</Text></Descriptions.Item>
-      </Descriptions>
-
-      <Descriptions title="Vuelo de vuelta" size="small" column={2}>
-        <Descriptions.Item label="Origen"><Text strong>{this.state.origin2.city}</Text></Descriptions.Item>
-        <Descriptions.Item label="Destino"><Text strong>{this.state.destination2.city}</Text></Descriptions.Item>
-        <Descriptions.Item label="Número de pasajeros"><Text italic>{this.numberOfPassengers}</Text></Descriptions.Item>
-      </Descriptions>
-
-    </PageHeader>
   }
 
-}
+  getFlightInformation() {
+    if (this.code_vuelta == undefined) {
+      return <PageHeader title="Información del vuelo" extra={[
+        <Button onClick={() => this.props.navigate("/")}>Cambiar búsqueda</Button>]}>
+        <Descriptions size="small" column={1}>
+          <Descriptions.Item label="Origen"><Text strong>{this.state.origin.city}</Text></Descriptions.Item>
+          <Descriptions.Item label="Destino"><Text strong>{this.state.destination.city}</Text></Descriptions.Item>
+          <Descriptions.Item label="Número de pasajeros"><Text italic>{this.numberOfPassengers}</Text></Descriptions.Item>
+        </Descriptions>
+      </PageHeader>
+    } else {
+      return <PageHeader title="Información de los vuelos" extra={[
+        <Button onClick={() => this.props.navigate("/")}>Cambiar búsqueda</Button>]}>
 
-render() {
-  return (
-    <div>
+        <Descriptions title="Vuelo de ida" size="small" column={2}>
+          <Descriptions.Item label="Origen"><Text strong>{this.state.origin.city}</Text></Descriptions.Item>
+          <Descriptions.Item label="Destino"><Text strong>{this.state.destination.city}</Text></Descriptions.Item>
+        </Descriptions>
 
-      {this.getFlightInformation()}
+        <Descriptions title="Vuelo de vuelta" size="small" column={2}>
+          <Descriptions.Item label="Origen"><Text strong>{this.state.origin2.city}</Text></Descriptions.Item>
+          <Descriptions.Item label="Destino"><Text strong>{this.state.destination2.city}</Text></Descriptions.Item>
+          <Descriptions.Item label="Número de pasajeros"><Text italic>{this.numberOfPassengers}</Text></Descriptions.Item>
+        </Descriptions>
 
-      <Divider></Divider>
-      {this.getSteps()}
+      </PageHeader>
+    }
 
-      <Divider></Divider>
-      {this.getContentAccordingToProgress()}
+  }
 
-    </div>
-  )
-}
+  render() {
+    return (
+      <div>
+
+        {this.getFlightInformation()}
+
+        <Divider></Divider>
+        {this.getSteps()}
+
+        <Divider></Divider>
+        {this.getContentAccordingToProgress()}
+
+      </div>
+    )
+  }
 }
 
 

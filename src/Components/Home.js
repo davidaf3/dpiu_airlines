@@ -3,10 +3,8 @@ import GetCheapestFlights from "./GetCheapestFlights";
 import { useNavigate } from "react-router-dom";
 import { serializeSearch } from "../searchSerialization";
 
-import ChangeFavouriteAirport from "./ChangeFavouriteAirport";
-import { Divider, Typography, Row } from "antd";
 
-export default function Home({ supabase, airports, user, onChangeFavouriteAirport }) {
+export default function Home({ supabase, airports, user }) {
   const navigate = useNavigate();
 
   const searchFlights = (search) => {
@@ -16,14 +14,6 @@ export default function Home({ supabase, airports, user, onChangeFavouriteAirpor
     });
   };
 
-  const showFavouriteAirport = () => {
-    let array = []
-    if ({user} != null) {
-      array.push(<Divider><Typography.Text>Selecciona tu aeropuerto favorito y te quedará guardado</Typography.Text></Divider>)
-      array.push(<Row justify="center"><ChangeFavouriteAirport onChange={onChangeFavouriteAirport} supabase={supabase} airports={airports} user={user} /></Row>)
-    }
-    return array
-  };
 
   return ( 
     <div>
@@ -32,7 +22,6 @@ export default function Home({ supabase, airports, user, onChangeFavouriteAirpor
         onSearch={searchFlights}
         user={user}
       ></SearchFlightInput>
-      {showFavouriteAirport()}
       <GetCheapestFlights supabase={supabase} user ={user}/>
 
 

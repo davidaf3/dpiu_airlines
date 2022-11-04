@@ -28,7 +28,7 @@ class GetCheapestFlights extends React.Component {
       const idx = this.state.airports.findIndex(
         (airport) => airport.code === this.props.user.airport
       );
-      if (idx !== -1) this.updateChosen({key: idx});
+      if (idx !== -1) this.updateChosen({ key: idx });
     }
   }
 
@@ -81,30 +81,34 @@ class GetCheapestFlights extends React.Component {
     }
   }
 
-  clickFlight(flight) { 
+  clickFlight(flight) {
     this.props.navigate(`/flights/buy_ticket?departure=${flight.code}&passengers=1`)
   }
 
   generateColumns() {
     let array = []
-    if (this.state.chosen == undefined) {
-      for (let i = 0; i < this.state.flights.length; i++) {
-        array.push(<Col gutter={16} span={6}>
-          <Card title={"Vuelo desde " + this.getNameCity(this.state.flights[i].origin) + " a " + this.getNameCity(this.state.flights[i].destination)} hoverable style={{ width: 350, }} cover={<img alt="example" src={"https://gfhyobdofzshidbbnaxf.supabase.co/storage/v1/object/public/cities/" + this.state.flights[i].destination + ".png"} />}>
-            <Button type="primary" onClick={() => this.clickFlight(this.state.flights[i])} >{"Billetes desde " + this.state.flights[i].base_price + " €"}</Button>
-          </Card>
-        </Col>)
+    let arrayRow = []
+    let stringToUse = ""
+    for (let i = 0; i < this.state.flights.length; i++) {
+      if (this.state.chosen == undefined) {
+        stringToUse = "Vuelo desde " + this.getNameCity(this.state.flights[i].origin) + " a " + this.getNameCity(this.state.flights[i].destination)
+      } else {
+        stringToUse = "Vuelo a " + this.getNameCity(this.state.flights[i].destination)
       }
-    } else {
-      for (let i = 0; i < this.state.flights.length; i++) {
-        array.push(<Col gutter={16} span={6}>
-          <Card title={"Vuelo a " + this.getNameCity(this.state.flights[i].destination)} hoverable style={{ width: 350, }} cover={<img alt="example" src={"https://gfhyobdofzshidbbnaxf.supabase.co/storage/v1/object/public/cities/" + this.state.flights[i].destination + ".png"} />}>
-            <Button type="primary" onClick={() => this.clickFlight(this.state.flights[i])} >{"Billetes desde " + this.state.flights[i].base_price + " €"}</Button>
-          </Card>
-        </Col>)
+      arrayRow.push(<Col>
+        <Card title={stringToUse} hoverable style={{ width: 350, }} cover={<img alt="example" src={"https://gfhyobdofzshidbbnaxf.supabase.co/storage/v1/object/public/cities/" + this.state.flights[i].destination + ".png"} />}>
+          <Row type="flex" justify="center"><Button type="primary" onClick={() => this.clickFlight(this.state.flights[i])} >{"Billetes desde " + this.state.flights[i].base_price + " €"}</Button></Row>
+        </Card>
+      </Col>)
+      arrayRow.push()
+      if (arrayRow.length == 3) {
+        console.log(arrayRow)
+        array = array.concat(<Row type="flex" justify="center"><Space size="middle">{arrayRow}</Space></Row>)
+        arrayRow = [];
       }
-
     }
+    array = array.concat(<Row type="flex" justify="center"><Space size="middle">{arrayRow}</Space></Row>)
+    console.log(array)
     return array;
   }
 
@@ -158,8 +162,8 @@ class GetCheapestFlights extends React.Component {
 
   render() {
     let array = []
-    array.push(<Divider><Row span={5}><Title level={3}>Destinos más baratos desde {this.generateDropDown()}</Title></Row></Divider>)
-    array.push(<Row justify="center" gutter={2}>{this.generateColumns()}</Row>)
+    array.push(<Divider><Row span={5}><Title level={3}>Destinos más baratos desde origen {this.generateDropDown()}</Title></Row></Divider>)
+    array.push(<Row justify="center" gutter={2}>{<Space direction="vertical" size="middle">{this.generateColumns()}</Space>}</Row>)
     return array
   }
 }
