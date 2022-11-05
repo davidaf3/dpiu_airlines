@@ -48,8 +48,6 @@ class App extends React.Component {
       user: null,
       isOpen: false
     };
-
-    this.isOpen = false;
   }
 
   componentDidMount() {
@@ -109,11 +107,8 @@ class App extends React.Component {
   }
 
   openDrawer() {
-    this.isOpen = true
-    console.log("hola")
-
     this.setState({
-      isOpen:true
+      isOpen: true
     })
     this.forceUpdate();
   }
@@ -255,8 +250,9 @@ class App extends React.Component {
             />
           </Routes>
         </Content>
-        <Drawer title="Selecciona tu aeropuerto favorito y se quedará guardado" placement="right" onClose={() => this.setState({isOpen: false})} open={this.state.isOpen}>
-          <ChangeFavouriteAirport onChange={this.onChangeFavouriteAirport} supabase={this.supabase} airports={this.state.airports} user={this.state.user} />
+        <Drawer title="Perfil de usuario" placement="right" onClose={() => this.setState({ isOpen: false })} open={this.state.isOpen}>
+          <Divider>Selecciona tu aeropuerto favorito</Divider>
+          <Row type="flex" justify="center"><ChangeFavouriteAirport onChange={this.onChangeFavouriteAirport} supabase={this.supabase} airports={this.state.airports} user={this.state.user} /></Row>
         </Drawer>
       </Layout>
     );
