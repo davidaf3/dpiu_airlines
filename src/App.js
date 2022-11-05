@@ -118,7 +118,7 @@ class App extends React.Component {
 
 
   render() {
-    const { Header, Content } = Layout;
+    const { Header, Content, Footer } = Layout;
 
     let menuItems = [
       {
@@ -253,6 +253,7 @@ class App extends React.Component {
             />
           </Routes>
         </Content>
+        <Footer></Footer>
         {this.state.user && 
           <Drawer title={this.state.user.email} placement="right" onClose={() => this.setState({ isOpen: false })} open={this.state.isOpen}>
             <Divider>Selecciona tu aeropuerto favorito</Divider>
