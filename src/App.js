@@ -167,7 +167,7 @@ class App extends React.Component {
             </Col>
             {this.state.user && (
               <Col>
-                <Avatar onClick={() => this.openDrawer()}>{this.state.user.email[0]}</Avatar>
+                <Avatar className="avatar" onClick={() => this.openDrawer()}>{this.state.user.email[0]}</Avatar>
               </Col>
             )}
           </Row>
@@ -250,10 +250,12 @@ class App extends React.Component {
             />
           </Routes>
         </Content>
-        <Drawer title="Perfil de usuario" placement="right" onClose={() => this.setState({ isOpen: false })} open={this.state.isOpen}>
-          <Divider>Selecciona tu aeropuerto favorito</Divider>
-          <Row type="flex" justify="center"><ChangeFavouriteAirport onChange={this.onChangeFavouriteAirport} supabase={this.supabase} airports={this.state.airports} user={this.state.user} /></Row>
-        </Drawer>
+        {this.state.user && 
+          <Drawer title={this.state.user.email} placement="right" onClose={() => this.setState({ isOpen: false })} open={this.state.isOpen}>
+            <Divider>Selecciona tu aeropuerto favorito</Divider>
+            <Row type="flex" justify="center"><ChangeFavouriteAirport onChange={this.onChangeFavouriteAirport.bind(this)} supabase={this.supabase} airports={this.state.airports} user={this.state.user} /></Row>
+          </Drawer>
+        }
       </Layout>
     );
   }

@@ -1,3 +1,7 @@
 html body {
     background-color: rgb(240, 242, 245);
 }
+
+.avatar:hover {
+    cursor: pointer;
+}
