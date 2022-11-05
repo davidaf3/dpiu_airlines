@@ -12,14 +12,17 @@
 
 .detailValue {
   background-color: white;
+  justify-content: flex-start;
+}
+.detailLabel {
+  justify-content: center;
 }
 
 .detailValue, .detailLabel {
   display: flex;
-  justify-content: center;
   align-items: center;
   height: 2.8em;
-  padding: 0em 1em;
+  padding: 0 2rem;
   border-bottom: 1px solid #f0f0f0;
 }
 

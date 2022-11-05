@@ -152,6 +152,7 @@ export default function TicketHistory({ supabase, airports, airlines, user }) {
       title: "Vuelo",
       dataIndex: "code",
       key: "code",
+      align: "left",
       render: (code) => (
         <Button
           type="link"
@@ -170,6 +171,7 @@ export default function TicketHistory({ supabase, airports, airlines, user }) {
       title: "Origen",
       dataIndex: "origin",
       key: "origin",
+      align: "left",
       render: (origin) =>
         airports.has(origin) ? airports.get(origin).name : origin,
       filters: originAirportFilter.current,
@@ -179,6 +181,7 @@ export default function TicketHistory({ supabase, airports, airlines, user }) {
       title: "Destino",
       dataIndex: "destination",
       key: "destination",
+      align: "left",
       render: (destination) =>
         airports.has(destination)
           ? airports.get(destination).name
@@ -210,6 +213,7 @@ export default function TicketHistory({ supabase, airports, airlines, user }) {
       title: "Aerolínea",
       dataIndex: "airline",
       key: "airline",
+      align: "left",
       render: (airline) =>
         airlines.has(airline) ? airlines.get(airline).name : airline,
       filters: airlinesFilter.current,
@@ -282,81 +286,84 @@ export default function TicketHistory({ supabase, airports, airlines, user }) {
     });
 
     return (
-      <Row style={{ width: "100%" }} className="detailContainer">
-        <Col span={3}>
-          {flight.tickets.map((ticket) => (
-            <Row key={"passengerLabel" + ticket.id} className="detailLabel">
-              Pasajero
-            </Row>
-          ))}
-        </Col>
-        <Col span={6}>
-          {flight.tickets.map((ticket) => (
-            <Row key={"passenger" + ticket.id} className="detailValue">
-              {ticket.firstName} {ticket.lastName}
-            </Row>
-          ))}
-        </Col>
-        <Col span={3}>
-          {flight.tickets.map((ticket) => (
-            <Row key={"seatLabel" + ticket.id} className="detailLabel">
-              Asiento
-            </Row>
-          ))}
-        </Col>
-        <Col span={3}>
-          {flight.tickets.map((ticket) => (
-            <Row key={"seat" + ticket.id} className="detailValue">
-              {ticket.row}
-              {String.fromCharCode(ticket.column + 64)}
-            </Row>
-          ))}
-        </Col>
-        <Col span={3}>
-          {flight.tickets.map((ticket) => (
-            <Row key={"priceLabel" + ticket.id} className="detailLabel">
-              Precio
-            </Row>
-          ))}
-        </Col>
-        <Col span={3}>
-          {flight.tickets.map((ticket) => (
-            <Row
-              key={"price" + ticket.id}
-              className="detailValue detailValueNumber"
-            >
-              {ticket.price} €
-            </Row>
-          ))}
-        </Col>
-        <Col span={3}>
-          {flight.tickets.map((ticket) => (
-            <Row key={"actions" + ticket.id} className="detailLabel">
-              <Popconfirm
-                placement="topRight"
-                title={"¿Seguro que desea devolver este billete?"}
-                onConfirm={() => onReturnTickets([ticket.id])}
-                okText="Sí"
-                cancelText="No"
+      <div style={{padding: "1rem"}}>
+        <Title level={5}>Pasajeros</Title>
+        <Row style={{ width: "100%" }} className="detailContainer">
+          <Col span={3}>
+            {flight.tickets.map((ticket) => (
+              <Row key={"passengerLabel" + ticket.id} className="detailLabel">
+                Nombre
+              </Row>
+            ))}
+          </Col>
+          <Col span={6}>
+            {flight.tickets.map((ticket) => (
+              <Row key={"passenger" + ticket.id} className="detailValue">
+                {ticket.firstName} {ticket.lastName}
+              </Row>
+            ))}
+          </Col>
+          <Col span={3}>
+            {flight.tickets.map((ticket) => (
+              <Row key={"seatLabel" + ticket.id} className="detailLabel">
+                Asiento
+              </Row>
+            ))}
+          </Col>
+          <Col span={3}>
+            {flight.tickets.map((ticket) => (
+              <Row key={"seat" + ticket.id} className="detailValue">
+                {ticket.row}
+                {String.fromCharCode(ticket.column + 64)}
+              </Row>
+            ))}
+          </Col>
+          <Col span={3}>
+            {flight.tickets.map((ticket) => (
+              <Row key={"priceLabel" + ticket.id} className="detailLabel">
+                Precio
+              </Row>
+            ))}
+          </Col>
+          <Col span={3}>
+            {flight.tickets.map((ticket) => (
+              <Row
+                key={"price" + ticket.id}
+                className="detailValue detailValueNumber"
               >
-                <Button
-                  style={
-                    flight.departure.isBefore(now)
-                      ? { visibility: "hidden" }
-                      : {}
-                  }
-                  type="link"
-                  danger
+                {ticket.price} €
+              </Row>
+            ))}
+          </Col>
+          <Col span={3}>
+            {flight.tickets.map((ticket) => (
+              <Row key={"actions" + ticket.id} className="detailLabel">
+                <Popconfirm
+                  placement="topRight"
+                  title={"¿Seguro que desea devolver este billete?"}
+                  onConfirm={() => onReturnTickets([ticket.id])}
+                  okText="Sí"
+                  cancelText="No"
                 >
-                  <Link type="danger" underline>
-                    Devolver
-                  </Link>
-                </Button>
-              </Popconfirm>
-            </Row>
-          ))}
-        </Col>
-      </Row>
+                  <Button
+                    style={
+                      flight.departure.isBefore(now)
+                        ? { visibility: "hidden" }
+                        : {}
+                    }
+                    type="link"
+                    danger
+                  >
+                    <Link type="danger" underline>
+                      Devolver
+                    </Link>
+                  </Button>
+                </Popconfirm>
+              </Row>
+            ))}
+          </Col>
+        </Row>
+      </div>
     );
   };
 
