@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import LoginForm from "./Components/LoginForm";
 import { Route, Routes, Link } from "react-router-dom";
 
-import { Divider, Typography, Layout, Menu, Col, Row, Avatar, Drawer, Button } from "antd";
+import { Divider, Layout, Menu, Col, Row, Avatar, Drawer } from "antd";
 import {
   UserAddOutlined,
   LoginOutlined,

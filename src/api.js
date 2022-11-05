@@ -1,7 +1,7 @@
 import moment from "moment";
 
 export async function getAirports(supabase) {
-  const { data } = await supabase.from("airport").select("code, name, country");
+  const { data } = await supabase.from("airport").select("code, name, country, city");
   return new Map(data.map((airport) => [airport.code, airport]));
 }
 
