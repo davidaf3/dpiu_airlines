@@ -7,16 +7,19 @@ const { Text, Title } = Typography;
 class GetCheapestFlights extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
+    const favouriteAirport = this.props.user?.airport;
     this.state = {
       flights: [],
-      chosen: undefined,
-      name: "Todos los aeropuertos",
+      chosen: favouriteAirport,
+      name: favouriteAirport ? 
+        this.getNameCity(favouriteAirport) : 
+        "Todos los aeropuertos",
     }
   }
 
   componentDidMount() {
-    this.getCheapestFlights(this.state.chosen);
+    this.getCheapestFlights(this.props.user?.airport);
   }
 
   componentDidUpdate(prevProps) {
@@ -59,6 +62,7 @@ class GetCheapestFlights extends React.Component {
     if (this.props.airports.has(code)) {
       return this.props.airports.get(code).city;
     }
+    return code;
   }
 
   clickFlight(flight) {

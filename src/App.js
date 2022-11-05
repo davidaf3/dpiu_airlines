@@ -45,13 +45,16 @@ class App extends React.Component {
     this.state = {
       airports: new Map(),
       airlines: new Map(),
-      user: null,
+      user: undefined,
       isOpen: false
     };
   }
 
   componentDidMount() {
-    this.supabase.auth.getUser().then(({ data }) => this.onNewUser(data.user));
+    this.supabase.auth.getUser().then(({ data }) => {
+      if(data?.user) this.onNewUser(data.user);
+      else this.setState({ user: null });
+    });
 
     Promise.all([getAirlines(this.supabase), getAirports(this.supabase)]).then(
       ([airlines, airports]) => {
@@ -148,7 +151,7 @@ class App extends React.Component {
       },
     ];
 
-    if (this.state.user === null) {
+    if (!this.state.user) {
       menuItems = menuItems.filter(
         (element) => !element.key.startsWith("auth")
       );

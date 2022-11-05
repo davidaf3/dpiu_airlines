@@ -20,7 +20,9 @@ export default function Home({ supabase, airports, user }) {
         onSearch={searchFlights}
         user={user}
       ></SearchFlightInput>
-      <GetCheapestFlights supabase={supabase} user={user} airports={airports} />
+      {user !== undefined && 
+        <GetCheapestFlights supabase={supabase} user={user} airports={airports} />
+      }
     </div>
   );
 }
