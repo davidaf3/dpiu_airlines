@@ -1,6 +1,7 @@
 import React from 'react';
 import withRouter from './withRouter';
 import { Tooltip, Col, Row, Typography, Descriptions, Button } from 'antd';
+import moment from "moment";
 
 class FlightDetails extends React.Component {
 
@@ -185,10 +186,10 @@ class FlightDetails extends React.Component {
           <Descriptions.Item label ="Código del vuelo" span = {3}>{ this.state.flight.code }</Descriptions.Item>
           <Descriptions.Item label ="Aeropuerto de origen">{ this.state.origin.name }</Descriptions.Item>
           <Descriptions.Item label ="Ciudad">{ this.state.origin.city }</Descriptions.Item>
-          <Descriptions.Item label ="Hora de salida">{ this.state.flight.departure }</Descriptions.Item>
+          <Descriptions.Item label ="Hora de salida">{ moment(this.state.flight.departure).format("DD/MM/YYYY HH:mm") }</Descriptions.Item>
           <Descriptions.Item label ="Aeropuerto de destino">{ this.state.destination.name }</Descriptions.Item>
           <Descriptions.Item label ="Ciudad">{ this.state.destination.city }</Descriptions.Item>
-          <Descriptions.Item label ="Hora de llegada">{ this.state.flight.arrival }</Descriptions.Item>
+          <Descriptions.Item label ="Hora de llegada">{ moment(this.state.flight.arrival).format("DD/MM/YYYY HH:mm") }</Descriptions.Item>
           <Descriptions.Item label ="Aerolínea" span = {2}>{ this.state.airline.name }</Descriptions.Item>
           <Descriptions.Item label ="Modelo del avión">{ this.state.plane.name }</Descriptions.Item>
           <Descriptions.Item label ="Asientos" span = {3}>{this.createSeats()}</Descriptions.Item>

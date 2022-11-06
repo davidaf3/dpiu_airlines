@@ -9,14 +9,24 @@ import {
   Descriptions,
   Row,
   Col,
+  ConfigProvider,
+  Empty,
 } from "antd";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import "./TicketHistory.css";
 
-const dateTimeFormat = "DD/MM/YY HH:mm";
 const dateFormat = "DD/MM/YY";
 const timeFormat = "HH:mm";
+
+function buyDateToStr(buyDate) {
+  const now = moment();
+  if (now.diff(buyDate, "days") >= 7 )
+    return buyDate.format(dateFormat);
+
+  const str = buyDate.fromNow();
+  return str[0].toUpperCase() + str.substring(1);
+}
 
 function updateFilter(filterRef, history, getter, mapper) {
   filterRef.current = [];
@@ -130,14 +140,14 @@ export default function TicketHistory({ supabase, airports, airlines, user }) {
     );
   }, [history, airlines]);
 
-  const { Title, Link } = Typography;
+  const { Title, Link, Text } = Typography;
 
   const flightColumns = [
     {
       title: "Fecha de compra",
       dataIndex: "buyDate",
       key: "buyDate",
-      render: (date) => date.format(dateTimeFormat),
+      render: (date) => buyDateToStr(date),
       sorter: (f1, f2) => f1.buyDate.diff(f2.buyDate),
       defaultSortOrder: "descend",
     },
@@ -286,7 +296,7 @@ export default function TicketHistory({ supabase, airports, airlines, user }) {
     });
 
     return (
-      <div style={{padding: "1rem"}}>
+      <div style={{ padding: "1rem" }}>
         <Title level={5}>Pasajeros</Title>
         <Row style={{ width: "100%" }} className="detailContainer">
           <Col span={3}>
@@ -383,23 +393,38 @@ export default function TicketHistory({ supabase, airports, airlines, user }) {
   return (
     <div>
       <Title level={2}>Historial de compras</Title>
-      <Table
-        loading={loading}
-        columns={flightColumns}
-        dataSource={history}
-        expandable={{
-          indentSize: 300,
-          expandRowByClick: true,
-          expandedRowRender: ticketRowRender,
-          expandedRowKeys: expandedRows,
-          onExpand,
-        }}
-        pagination={{
-          current: currentPage,
-          onChange: onPaginationChange,
-          pageSize: 10,
-        }}
-      />
+      <ConfigProvider
+        renderEmpty={() => (
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description="Todavía no has realizado ninguna compra."
+          />
+        )}
+      >
+        <Table
+          loading={loading}
+          columns={flightColumns}
+          dataSource={history}
+          title={() => (
+            <Text>
+              <Text strong>{history.length}</Text>{" "}
+              {history.length === 1 ? "compra" : "compras"} en el historial
+            </Text>
+          )}
+          expandable={{
+            indentSize: 300,
+            expandRowByClick: true,
+            expandedRowRender: ticketRowRender,
+            expandedRowKeys: expandedRows,
+            onExpand,
+          }}
+          pagination={{
+            current: currentPage,
+            onChange: onPaginationChange,
+            pageSize: 5,
+          }}
+        />
+      </ConfigProvider>
     </div>
   );
 }

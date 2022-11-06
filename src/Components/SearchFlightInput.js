@@ -157,9 +157,10 @@ export default function SearchFlightInput({
                   ]}
                 >
                   <DatePicker.RangePicker
+                    format="DD/MM/YYYY"
                     placeholder={[
-                      "Selecciona la fecha de ida",
-                      "Selecciona la fecha de vuelta",
+                      "Fecha de ida",
+                      "Fecha de vuelta",
                     ]}
                     style={{ width: "100%" }}
                     disabledDate={disabledDate}
@@ -177,7 +178,8 @@ export default function SearchFlightInput({
                   ]}
                 >
                   <DatePicker
-                    placeholder={"Selecciona la fecha de salida"}
+                    format="DD/MM/YYYY"
+                    placeholder={"Fecha de salida"}
                     style={{ width: "100%" }}
                     disabledDate={disabledDate}
                   ></DatePicker>

@@ -1,6 +1,16 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import FlightCard from "./FlightCard";
-import { List, Row, Col, Typography, Drawer, Button, Badge } from "antd";
+import {
+  List,
+  Row,
+  Col,
+  Typography,
+  Drawer,
+  Button,
+  Badge,
+  ConfigProvider,
+  Empty,
+} from "antd";
 import { FilterOutlined } from "@ant-design/icons";
 import RoundTripCard from "./RoundTripCard";
 import SortDropdown from "./SortDropdown";
@@ -151,44 +161,65 @@ export default function SearchResults({
 
   return (
     <div>
-      <List
-        style={{ backgroundColor: "white" }}
-        loading={loading}
-        bordered={true}
-        dataSource={results}
-        pagination={{
-          pageSize: 10,
-        }}
-        header={
-          <Row>
-            <Col style={{ display: "flex", alignItems: "center" }}>
+      <ConfigProvider
+        renderEmpty={() => (
+          <Empty
+            image={Empty.PRESENTED_IMAGE_DEFAULT}
+            description={
               <div>
-                <Text strong>{results.length}</Text>{" "}
-                <Text>{results.length === 1 ? "resultado" : "resultados"}</Text>
+                <Typography.Paragraph>
+                  No se han encontrado resultados para tu búsqueda.
+                </Typography.Paragraph>
+                <Typography.Paragraph>
+                  Revisa el número de pasajeros introducido o prueba con otras
+                  fechas.
+                </Typography.Paragraph>
               </div>
-            </Col>
-            <Col
-              flex={"auto"}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginRight: "1em",
-              }}
-            >
-              <SortDropdown onSelect={selectOrder}></SortDropdown>
-            </Col>
-            <Col>
-              <Button
-                icon={<FilterOutlined />}
-                onClick={() => setFiltersOpen(true)}
+            }
+          />
+        )}
+      >
+        <List
+          style={{ backgroundColor: "white" }}
+          loading={loading}
+          bordered={true}
+          dataSource={results}
+          pagination={{
+            pageSize: 10,
+          }}
+          header={
+            <Row>
+              <Col style={{ display: "flex", alignItems: "center" }}>
+                <div>
+                  <Text strong>{results.length}</Text>{" "}
+                  <Text>
+                    {results.length === 1 ? "resultado" : "resultados"}
+                  </Text>
+                </div>
+              </Col>
+              <Col
+                flex={"auto"}
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginRight: "1em",
+                }}
               >
-                Filtrar
-              </Button>
-            </Col>
-          </Row>
-        }
-        renderItem={renderResult}
-      ></List>
+                <SortDropdown onSelect={selectOrder}></SortDropdown>
+              </Col>
+              <Col>
+                <Button
+                  icon={<FilterOutlined />}
+                  onClick={() => setFiltersOpen(true)}
+                >
+                  Filtrar
+                </Button>
+              </Col>
+            </Row>
+          }
+          renderItem={renderResult}
+        ></List>
+      </ConfigProvider>
       <Drawer
         open={filtersOpen}
         onClose={() => setFiltersOpen(false)}

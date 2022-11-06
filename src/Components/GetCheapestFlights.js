@@ -136,7 +136,7 @@ class GetCheapestFlights extends React.Component {
 
   render() {
     let array = []
-    array.push(<Divider><Row span={5}><Title level={3}>Destinos más baratos desde origen {this.generateDropDown()}</Title></Row></Divider>)
+    array.push(<Divider><Row span={5}><Title level={3}>Destinos más baratos volando desde {this.generateDropDown()}</Title></Row></Divider>)
     array.push(<Row justify="center" gutter={2}>{<Space direction="vertical" size="middle">{this.generateColumns()}</Space>}</Row>)
     return array
   }
