@@ -56,7 +56,6 @@ class TicketBuyPassengers extends React.Component {
   }
 
   getFlightDetails = async () => {
-    console.log(this.code);
     const { data, error } = await this.props.supabase
       .from('flight')
       .select()
@@ -273,9 +272,9 @@ class TicketBuyPassengers extends React.Component {
       incremented = true
     }
     if (this.state.resaltarAsientosBaratos && !incremented) {
-      return <Tooltip placement="top" title={"Asiento " + numberOfSeat}><Col span={2}><Button type="primary" ghost onClick={() => { this.addTicket(row, column, price) }} style={{ width: "100%" }}>{price + "€"}</Button></Col></Tooltip>
+      return <Col span={2} key={row + column}><Tooltip placement="top" title={"Asiento " + numberOfSeat}><Button type="primary" ghost style={{background: "white"}} block onClick={() => { this.addTicket(row, column, price) }}>{price + "€"}</Button></Tooltip></Col>
     } else {
-      return <Tooltip placement="top" title={"Asiento " + numberOfSeat}><Col span={2}><Button onClick={() => { this.addTicket(row, column, price) }} style={{ width: "100%" }}>{price + "€"}</Button></Col></Tooltip>
+      return <Col span={2} key={row + column}><Tooltip placement="top" title={"Asiento " + numberOfSeat}><Button block onClick={() => { this.addTicket(row, column, price) }}>{price + "€"}</Button></Tooltip></Col>
 
     }
   }
@@ -319,13 +318,13 @@ class TicketBuyPassengers extends React.Component {
       if (reserved == 0) {
         array.push(this.placeSeat(row, i, numberOfSeat))
       } else if (reserved == 1) {
-        array.push(<Tooltip placement="top" title="Ya reservada"><Col span={2}><Button style={{ width: "100%" }} disabled>X</Button></Col></Tooltip>)
+        array.push(<Col span={2} key={row + i}><Tooltip placement="top" title="Ya reservada"><Button block disabled>X</Button></Tooltip></Col>)
       } else if (reserved == 2) {
-        array.push(<Tooltip placement="top" title="Ya has reservado este asiento"><Col span={2}><Button style={{ width: "100%" }} disabled>X</Button></Col></Tooltip>)
+        array.push(<Col span={2} key={row + i}><Tooltip placement="top" title="Ya has reservado este asiento"><Button block disabled>X</Button></Tooltip></Col>)
       }
 
       if (i == half_length) {
-        array.push(<Col span={2}><Button style={{ width: "100%" }}></Button></Col>)
+        array.push(<Col span={2} key={"space" + i}><Button style={{ width: "100%" }}></Button></Col>)
       }
       numberOfSeat += 1;
       reserved = 0;
@@ -336,7 +335,7 @@ class TicketBuyPassengers extends React.Component {
   createSeats = () => {
     const array = []
     var numberOfSeat = 1
-    array.push(<Row style={{ width: "80%", marginBottom: "1em" }}>
+    array.push(<Row key={"cols"} style={{ width: "80%", marginBottom: "1em" }}>
       <Col align="middle" span={2}><Typography.Text>Asientos</Typography.Text></Col>
       <Col align="middle" span={2}><Typography.Text>A</Typography.Text></Col>
       <Col align="middle" span={2}><Typography.Text>B</Typography.Text></Col>
@@ -349,7 +348,7 @@ class TicketBuyPassengers extends React.Component {
 
 
     for (var i = 1; i <= this.state.plane.rows; i++) {
-      array.push(<Row style={{ width: "80%", marginBottom: "1em" }}><Col align="middle" span={2}><Typography.Text>{i}</Typography.Text></Col>{this.createRowSeat(i, numberOfSeat)}</Row>);
+      array.push(<Row key={"row" + i} style={{ width: "80%", marginBottom: "1em" }}><Col align="middle" span={2}><Typography.Text>{i}</Typography.Text></Col>{this.createRowSeat(i, numberOfSeat)}</Row>);
       if (!this.hayquehacervuelta) {
         numberOfSeat += this.state.plane.columns
       }
@@ -494,7 +493,6 @@ class TicketBuyPassengers extends React.Component {
 
 
   updateSeatButtons() {
-    console.log(!this.state.resaltarAsientosBaratos)
     this.setState({
       resaltarAsientosBaratos: !this.state.resaltarAsientosBaratos
     })
@@ -531,7 +529,7 @@ class TicketBuyPassengers extends React.Component {
             <Row type="flex" justify="center">
               <Space size="middle">
                 <Col>
-                  <Button onClick={() => this.props.navigate("/")}> Cambiar búsqueda</Button>
+                  <Button onClick={() => this.props.navigate(-1)}> Cambiar búsqueda</Button>
                 </Col>
                 <Col>
                   <Button htmlType="submit" type="primary">Siguiente</Button>
@@ -795,7 +793,7 @@ class TicketBuyPassengers extends React.Component {
   getFlightInformation() {
     if (this.code_vuelta == undefined) {
       return <PageHeader title="Información del vuelo" extra={[
-        <Button onClick={() => this.props.navigate("/")}>Cambiar búsqueda</Button>]}>
+        <Button onClick={() => this.props.navigate(-1)}>Cambiar búsqueda</Button>]}>
         <Descriptions size="small" column={1}>
           <Descriptions.Item label="Origen"><Text strong>{this.state.origin.city}</Text></Descriptions.Item>
           <Descriptions.Item label="Destino"><Text strong>{this.state.destination.city}</Text></Descriptions.Item>
@@ -804,7 +802,7 @@ class TicketBuyPassengers extends React.Component {
       </PageHeader>
     } else {
       return <PageHeader title="Información de los vuelos" extra={[
-        <Button onClick={() => this.props.navigate("/")}>Cambiar búsqueda</Button>]}>
+        <Button onClick={() => this.props.navigate(-1)}>Cambiar búsqueda</Button>]}>
 
         <Descriptions title="Vuelo de ida" size="small" column={2}>
           <Descriptions.Item label="Origen"><Text strong>{this.state.origin.city}</Text></Descriptions.Item>

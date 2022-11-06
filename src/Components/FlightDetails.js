@@ -16,12 +16,13 @@ class FlightDetails extends React.Component {
             airline: {},
             tickets: {}
           }
-          this.getFlightDetails();
+    }
 
+    componentDidMount() {
+      this.getFlightDetails();
     }
 
     getFlightDetails = async () => {
-        console.log(this.code);
         const { data, error } = await this.props.supabase
           .from('flight')
           .select()
@@ -120,7 +121,7 @@ class FlightDetails extends React.Component {
         if (row == 1) {
           price += 30;
         }
-        return <Tooltip placement="top" title={price + " €"}><Col span={2}><Button onClick={() => { this.addTicket(row, column, price) }} style={{ width: "100%" }}>{numberOfSeat}</Button></Col></Tooltip>
+        return <Col span={2} key={row + column}><Tooltip placement="top" title={price + " €"}><Button onClick={() => { this.addTicket(row, column, price) }} block>{numberOfSeat}</Button></Tooltip></Col>
       }
     
       createRowSeat = (j, numberOfSeat) => {
@@ -144,11 +145,11 @@ class FlightDetails extends React.Component {
           if (reserved == 0) {
             array.push(this.placeSeat(row, i, numberOfSeat))
           } else if (reserved == 1) {
-            array.push(<Tooltip placement="top" title="Ya reservada"><Col span={2}><Button style={{ width: "100%" }} disabled>X</Button></Col></Tooltip>)
+            array.push(<Col span={2} key={row + i}><Tooltip placement="top" title="Ya reservada"><Button block disabled>X</Button></Tooltip></Col>)
           }
     
           if (i == half_length) {
-            array.push(<Col span={2}><Button style={{ width: "100%" }}></Button></Col>)
+            array.push(<Col span={2} key={row + "space"}><Button style={{ width: "100%" }}></Button></Col>)
           }
           numberOfSeat += 1;
           reserved = 0;
@@ -159,7 +160,7 @@ class FlightDetails extends React.Component {
       createSeats = () => {
         const array = []
         var numberOfSeat = 1
-        array.push(<Row style={{ width: "80%", marginBottom: "1em" }}>
+        array.push(<Row style={{ width: "80%", marginBottom: "1em" }} key="cols">
           <Col align="middle" span={2}></Col>
           <Col align="middle" span={2}><Typography.Text>A</Typography.Text></Col>
           <Col align="middle" span={2}><Typography.Text>B</Typography.Text></Col>
@@ -172,7 +173,7 @@ class FlightDetails extends React.Component {
     
     
         for (var i = 1; i <= this.state.plane.rows; i++) {
-          array.push(<Row style={{ width: "80%", marginBottom: "1em" }}><Col align="middle" span={2}><Typography.Text>{i}</Typography.Text></Col>{this.createRowSeat(i, numberOfSeat)}</Row>);
+          array.push(<Row style={{ width: "80%", marginBottom: "1em" }} key={"row" + i}><Col align="middle" span={2}><Typography.Text>{i}</Typography.Text></Col>{this.createRowSeat(i, numberOfSeat)}</Row>);
           numberOfSeat += this.state.plane.columns
         }
     
