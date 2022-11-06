@@ -21,8 +21,7 @@ const timeFormat = "HH:mm";
 
 function buyDateToStr(buyDate) {
   const now = moment();
-  if (now.diff(buyDate, "days") >= 7 )
-    return buyDate.format(dateFormat);
+  if (now.diff(buyDate, "days") >= 7) return buyDate.format(dateFormat);
 
   const str = buyDate.fromNow();
   return str[0].toUpperCase() + str.substring(1);
@@ -253,7 +252,11 @@ export default function TicketHistory({ supabase, airports, airlines, user }) {
           title={
             "¿Seguro que desea devolver todos los billetes de esta compra?"
           }
-          onConfirm={() => onReturnTickets(tickets.map((ticket) => ticket.id))}
+          onCancel={(e) => e.stopPropagation()}
+          onConfirm={(e) => {
+            e.stopPropagation();
+            onReturnTickets(tickets.map((ticket) => ticket.id));
+          }}
           okText="Sí"
           cancelText="No"
         >
