@@ -1,10 +1,11 @@
 import React from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
  
 const withRouter = WrappedComponent => props => {
   const params = useParams();
   const navigate   = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
 
   return (
     <WrappedComponent
@@ -13,6 +14,7 @@ const withRouter = WrappedComponent => props => {
       navigate ={navigate}
       searchParams={searchParams}
       setSearchParams={setSearchParams}
+      location={location}
     />
   );
 };

@@ -122,7 +122,10 @@ class App extends React.Component {
 
     let menuItems = [
       {
-        key: "logo",
+        key: "/logo",
+        paths: ["/", "/flights/search"],
+        anon: true,
+        auth: true,
         label: (
           <Link to="/">
             <img
@@ -135,30 +138,37 @@ class App extends React.Component {
         ),
       },
       {
-        key: "anon_menuLogin",
+        key: "login",
+        anon: true,
+        auth: false,
+        paths: ["/login"],
         label: <Link to="/login">Iniciar sesión</Link>,
         icon: <LoginOutlined />,
       },
       {
-        key: "anon_menuSignup",
+        key: "signup",
+        anon: true,
+        auth: false,
+        paths: ["/signup"],
         label: <Link to="/signup">Registrarse</Link>,
         icon: <UserAddOutlined />,
       },
       {
-        key: "auth_history",
+        key: "history",
+        anon: false,
+        auth: true,
+        paths: ["/user/history"],
         label: <Link to="/user/history">Historial de compras</Link>,
         icon: <HistoryOutlined />,
       },
     ];
 
-    if (!this.state.user) {
-      menuItems = menuItems.filter(
-        (element) => !element.key.startsWith("auth")
-      );
+    if (this.state.user === undefined) {
+      menuItems = menuItems.filter((element) => element.anon && element.auth);
+    } else if (this.state.user === null) {
+      menuItems = menuItems.filter((element) => element.auth);
     } else {
-      menuItems = menuItems.filter(
-        (element) => !element.key.startsWith("anon")
-      );
+      menuItems = menuItems.filter((element) => element.auth);
     }
 
     return (
@@ -166,7 +176,16 @@ class App extends React.Component {
         <Header style={{ marginBottom: "2em" }}>
           <Row>
             <Col style={{ marginRight: "auto", width: "80%" }}>
-              <Menu theme="dark" mode="horizontal" items={menuItems}></Menu>
+              <Menu 
+                theme="dark" 
+                mode="horizontal" 
+                items={menuItems} 
+                selectedKeys={
+                  menuItems
+                    .filter((item) => item.paths.includes(this.props.location.pathname))
+                    .map((item) => item.key)
+                }>
+              </Menu>
             </Col>
             {this.state.user && (
               <Col>
