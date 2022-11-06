@@ -80,7 +80,13 @@ export default function SearchFlightInput({
           onFinish={onSearch}
           name="searchFlight"
           layout="vertical"
-          initialValues={values ?? { passengers: 1, roundTrip }}
+          initialValues={
+            values ?? {
+              passengers: 1,
+              roundTrip,
+              dates: [moment().add(1, "day"), undefined],
+            }
+          }
         >
           <Row align="bottom">
             <Form.Item name="roundTrip">
@@ -158,10 +164,7 @@ export default function SearchFlightInput({
                 >
                   <DatePicker.RangePicker
                     format="DD/MM/YYYY"
-                    placeholder={[
-                      "Fecha de ida",
-                      "Fecha de vuelta",
-                    ]}
+                    placeholder={["Fecha de ida", "Fecha de vuelta"]}
                     style={{ width: "100%" }}
                     disabledDate={disabledDate}
                   ></DatePicker.RangePicker>

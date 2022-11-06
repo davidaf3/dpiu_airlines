@@ -13,8 +13,8 @@ import {
 } from "antd";
 import { FilterOutlined } from "@ant-design/icons";
 import RoundTripCard from "./RoundTripCard";
-import SortDropdown from "./SortDropdown";
 import SearchFilters from "./SearchFilters";
+import SortSegmented from "./SortSegmented";
 import {
   searchSingleFlight,
   searchRoundTrip,
@@ -205,7 +205,7 @@ export default function SearchResults({
                   marginRight: "1em",
                 }}
               >
-                <SortDropdown onSelect={selectOrder}></SortDropdown>
+                <SortSegmented onSelect={selectOrder} />
               </Col>
               <Col>
                 <Button

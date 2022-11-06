@@ -28,6 +28,11 @@ function buyDateToStr(buyDate) {
   return str[0].toUpperCase() + str.substring(1);
 }
 
+function trimName(name) {
+  if (name.length <= 25) return name;
+  return name.substring(0, 25) + "...";
+}
+
 function updateFilter(filterRef, history, getter, mapper) {
   filterRef.current = [];
   const visitedElementds = new Set();
@@ -302,21 +307,21 @@ export default function TicketHistory({ supabase, airports, airlines, user }) {
           <Col span={3}>
             {flight.tickets.map((ticket) => (
               <Row key={"passengerLabel" + ticket.id} className="detailLabel">
-                Nombre
+                <Text type="secondary">Nombre</Text>
               </Row>
             ))}
           </Col>
           <Col span={6}>
             {flight.tickets.map((ticket) => (
               <Row key={"passenger" + ticket.id} className="detailValue">
-                {ticket.firstName} {ticket.lastName}
+                {trimName(ticket.firstName + " " + ticket.lastName)}
               </Row>
             ))}
           </Col>
           <Col span={3}>
             {flight.tickets.map((ticket) => (
               <Row key={"seatLabel" + ticket.id} className="detailLabel">
-                Asiento
+                <Text type="secondary">Asiento</Text>
               </Row>
             ))}
           </Col>
@@ -331,7 +336,7 @@ export default function TicketHistory({ supabase, airports, airlines, user }) {
           <Col span={3}>
             {flight.tickets.map((ticket) => (
               <Row key={"priceLabel" + ticket.id} className="detailLabel">
-                Precio
+                <Text type="secondary">Precio</Text>
               </Row>
             ))}
           </Col>

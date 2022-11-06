@@ -164,12 +164,19 @@ class App extends React.Component {
     ];
 
     if (this.state.user === undefined) {
-      menuItems = menuItems.filter((element) => element.anon && element.auth);
+      menuItems = menuItems.filter((item) => item.anon && item.auth);
     } else if (this.state.user === null) {
-      menuItems = menuItems.filter((element) => element.auth);
+      menuItems = menuItems.filter((item) => item.anon);
     } else {
-      menuItems = menuItems.filter((element) => element.auth);
+      menuItems = menuItems.filter((item) => item.auth);
     }
+    
+    menuItems = menuItems.map((item) => ({
+      key: item.key,
+      label: item.label,
+      icon: item.icon,
+      paths: item.paths
+    }));
 
     return (
       <Layout className="layout">
