@@ -1,0 +1,7 @@
+.ant-list-item {
+    transition: background 0.3s;
+}
+
+.ant-list-item:hover {
+    background: #fafafa;
+}

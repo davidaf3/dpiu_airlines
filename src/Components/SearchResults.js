@@ -11,6 +11,7 @@ import {
   searchSingleFlightAndMetadata,
   searchRoundTripAndMetadata,
 } from "../api";
+import "./SearchResults.css";
 
 export default function SearchResults({
   supabase,
